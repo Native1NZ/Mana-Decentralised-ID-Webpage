@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mana Mock Election</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='koru_favicon.png') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='vote.css') }}" />
+</head>
+<body class="vote-theme">
+
+  <header class="app-header">
+    <div class="emblem">
+      <img src="{{ url_for('static', filename='koru_favicon.png') }}" alt="Koru emblem" />
+    </div>
+    <p class="eyebrow">Identity-Gated Voting Demo</p>
+    <h1 class="title">Mana Mascot Vote</h1>
+    <div class="gold-rule"></div>
+  </header>
+
+  <main class="ballot-wrap">
+
+    <section class="page ballot-page">
+      <p class="eyebrow">Ballot Page</p>
+      <h2 class="section-title">Cast Your Vote</h2>
+      <p class="page-note">
+        Only wallets that have completed identity verification on the
+        Register page can vote here, and the contract only allows one
+        vote per verified identity - checked on-chain before anything
+        is recorded.
+      </p>
+
+      <label class="field-label" for="voter-wallet-display">Wallet Address</label>
+      <div class="wallet-row">
+        <input class="field-input mono" type="text" id="voter-wallet-display" placeholder="Not connected" readonly />
+        <button class="btn btn-outline" id="voter-connect-btn">Connect Wallet</button>
+      </div>
+
+      <p class="status-text" id="eligibility-status"></p>
+
+      <div class="hairline"></div>
+
+      <div class="ballot-options" id="ballot-options">
+        <button class="ballot-option" data-option="Kiwi">
+          <span class="ballot-option-name">Kiwi</span>
+        </button>
+        <button class="ballot-option" data-option="Tuatara">
+          <span class="ballot-option-name">Tuatara</span>
+        </button>
+        <button class="ballot-option" data-option="Kea">
+          <span class="ballot-option-name">Kea</span>
+        </button>
+      </div>
+
+      <p class="status-text" id="vote-status"></p>
+    </section>
+
+    <section class="page results-page">
+      <p class="eyebrow">Results Page</p>
+      <h2 class="section-title">Live Tally</h2>
+      <div class="results-bars" id="results-bars"></div>
+      <p class="status-text" id="total-votes"></p>
+    </section>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.1/dist/ethers.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='vote.js') }}"></script>
+</body>
+</html>

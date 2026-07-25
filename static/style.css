@@ -1,0 +1,484 @@
+/* ------------------------------------------------------------------
+   Digital Passport - design tokens
+   ------------------------------------------------------------------ */
+:root {
+  --navy-bg: #0D0D0D;      /* page background - black (mangu) */
+  --navy-panel: #161616;   /* card background - near-black */
+  --navy-field: #262626;   /* input/box background - dark gray */
+  --gold: #C8102E;         /* primary accent - red (whero) */
+  --gold-dim: #FFFFFF;     /* borders/outlines - white (mā) */
+  --text-primary: #FFFFFF; /* body text - white */
+  --text-muted: #B3B3B3;   /* secondary text - light gray */
+  --verified-green: #C8102E; /* seal / MRZ ink - red */
+  --error-red: #E8493F;    /* error text - warmer red, distinct from the seal */
+
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-body: "Segoe UI", system-ui, sans-serif;
+  --font-mono: Consolas, "Courier New", monospace;
+}
+
+* { box-sizing: border-box; }
+
+/* ---------------- Top nav ---------------- */
+.top-nav {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--gold-dim);
+  margin-bottom: 8px;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text-primary);
+  -webkit-box-shadow: 0 0 0px 1000px var(--navy-field) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.nav-link {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-link:hover { color: var(--text-primary); }
+
+.nav-link.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--navy-bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 48px;
+}
+
+/* ---------------- Header ---------------- */
+.app-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 4px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  margin: 0;
+}
+
+.emblem {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  border: 3px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+  overflow: hidden;
+}
+
+.emblem img {
+  width: 68%;
+  height: 68%;
+  object-fit: contain;
+}
+
+.gold-rule {
+  width: 140px;
+  height: 2px;
+  background: var(--gold);
+  margin: 12px auto 0;
+}
+
+/* ---------------- Booklet layout ---------------- */
+.booklet {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  max-width: 920px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.page {
+  flex: 1 1 380px;
+  max-width: 420px;
+  background: var(--navy-panel);
+  border: 2px solid var(--gold-dim);
+  border-radius: 14px;
+  padding: 24px 28px 28px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  margin: 0 0 20px;
+}
+
+/* ---------------- Form fields ---------------- */
+.field-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 16px 0 6px;
+}
+
+.field-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  background: var(--navy-field);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+}
+
+.field-input.mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.field-input:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+
+.wallet-row {
+  display: flex;
+  gap: 8px;
+}
+
+.wallet-row .field-input { flex: 1; }
+
+.hairline {
+  height: 1px;
+  background: var(--gold-dim);
+  margin: 22px 0;
+}
+
+/* ---------------- Buttons ---------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 38px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border: none;
+  margin-top: 8px;
+  transition: opacity 0.15s ease;
+}
+
+.btn:hover { opacity: 0.85; }
+
+.btn-gold {
+  background: var(--gold);
+  color: var(--navy-bg);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--gold);
+  color: var(--gold);
+}
+
+.wallet-row .btn-outline {
+  width: auto;
+  padding: 0 16px;
+  white-space: nowrap;
+  margin-top: 0;
+}
+
+.status-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  min-height: 16px;
+  margin: 8px 0 4px;
+}
+
+.status-text.ok { color: var(--verified-green); }
+.status-text.error { color: var(--error-red); }
+
+/* ---------------- Photo page ---------------- */
+.photo-page { display: flex; flex-direction: column; align-items: center; }
+
+.chip-icon {
+  width: 54px;
+  height: 40px;
+  border-radius: 6px;
+  margin: 4px 0 14px;
+  background: var(--gold);
+  background-image:
+    linear-gradient(var(--navy-bg), var(--navy-bg)),
+    linear-gradient(var(--navy-bg), var(--navy-bg)),
+    linear-gradient(var(--navy-bg), var(--navy-bg)),
+    linear-gradient(var(--navy-bg), var(--navy-bg));
+  background-repeat: no-repeat;
+  background-size: 2px 32px, 2px 32px, 2px 32px, 46px 2px;
+  background-position: 30% center, 50% center, 70% center, center center;
+}
+
+.photo-frame {
+  position: relative;
+  width: 280px;
+  height: 176px; /* ~1.586:1, standard ID card ratio */
+  background: var(--navy-field);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* show the whole ID, don't crop it */
+}
+
+.photo-placeholder {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ---------------- Verification seal ---------------- */
+.seal {
+  position: absolute;
+  right: 8%;
+  bottom: 8%;
+  opacity: 0;
+  transform: rotate(14deg) scale(0.6);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.seal.show {
+  opacity: 1;
+  transform: rotate(14deg) scale(1);
+}
+
+.seal-ring {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 4px solid var(--verified-green);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.seal-ring::before {
+  content: "";
+  position: absolute;
+  width: 108px;
+  height: 108px;
+  border-radius: 50%;
+  border: 2px solid var(--verified-green);
+}
+
+.seal-text-big {
+  font-family: var(--font-display);
+  font-weight: bold;
+  font-size: 15px;
+  color: var(--verified-green);
+}
+
+.seal-text-small {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--verified-green);
+  margin-top: 2px;
+}
+
+/* ---------------- Scanner / MRZ ---------------- */
+.spinner-row {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.spinner-row.show { display: flex; }
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--navy-field);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+.spinner-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.mrz {
+  width: 250px;
+  margin: 16px 0 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--verified-green);
+  white-space: pre-wrap;
+  min-height: 32px;
+}
+
+@media (max-width: 480px) {
+  .page { padding: 20px; }
+}
+
+/* ---------------- Visa page (access & permissions) ---------------- */
+.visa-page {
+  max-width: 868px;
+  margin: 24px auto 0;
+  width: 100%;
+}
+
+.page-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  max-width: 560px;
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.visa-columns {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.visa-col {
+  flex: 1 1 280px;
+}
+
+.visa-btn-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.visa-btn-row .btn { margin-top: 0; }
+
+/* ---------------- Vote page ---------------- */
+.ballot-wrap {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 24px 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.ballot-page, .results-page {
+  flex: 1 1 380px;
+  max-width: 420px;
+}
+
+.ballot-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ballot-option {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--navy-field);
+  border: 2px solid var(--gold-dim);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.ballot-option:hover:not(:disabled) {
+  border-color: var(--gold);
+}
+
+.ballot-option:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.ballot-option.selected {
+  border-color: var(--verified-green);
+  color: var(--verified-green);
+}
+
+.results-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.result-row .result-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.result-track {
+  width: 100%;
+  height: 14px;
+  background: var(--navy-field);
+  border: 1px solid var(--gold-dim);
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.result-fill {
+  height: 100%;
+  background: var(--gold);
+  transition: width 0.4s ease;
+}

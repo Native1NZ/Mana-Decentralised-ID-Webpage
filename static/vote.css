@@ -1,0 +1,84 @@
+/* ------------------------------------------------------------------
+   Tuakiri Mock Election - civic/ballot theme
+   Overrides the passport theme's tokens (CSS variables inherit down
+   from .vote-theme on <body>) plus a few structural tweaks, so this
+   page reads as a distinct application rather than another page of
+   the passport app.
+   ------------------------------------------------------------------ */
+
+.vote-theme {
+  --navy-bg: #0A1F3D;
+  --navy-panel: #112A4D;
+  --navy-field: #16345E;
+  --gold: #F2B705;          /* civic gold instead of passport red */
+  --gold-dim: #3E5C89;      /* soft blue borders instead of black */
+  --text-primary: #F5F7FA;
+  --text-muted: #9FB3CC;
+  --verified-green: #4C9A6A;
+  --error-red: #E15554;
+
+  --font-display: "Segoe UI", system-ui, sans-serif; /* modern civic sans, not passport serif */
+  --font-body: "Segoe UI", system-ui, sans-serif;
+  --font-mono: Consolas, "Courier New", monospace;
+}
+
+/* softer, rounder cards instead of the passport's sharp document pages */
+.vote-theme .page {
+  border-radius: 20px;
+  border-width: 1px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.vote-theme .app-header {
+  padding: 0px 0px 20px;
+}
+
+.vote-theme .emblem {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(242, 183, 5, 0.12);
+  overflow: visible;
+}
+
+.vote-theme .gold-rule {
+  background: var(--gold);
+  height: 3px;
+}
+
+.vote-theme .btn-gold {
+  background: var(--gold);
+  color: var(--navy-bg);
+}
+
+.vote-theme .btn-outline {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.vote-theme .section-title {
+  color: #FFFFFF;
+}
+
+/* ballot options get a left accent bar and a bit more presence */
+.vote-theme .ballot-option {
+  border-left: 4px solid var(--gold-dim);
+  border-radius: 10px;
+  transition: border-color 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
+}
+
+.vote-theme .ballot-option:hover:not(:disabled) {
+  border-left-color: var(--gold);
+  transform: translateX(2px);
+}
+
+.vote-theme .ballot-option.selected {
+  border-left-color: var(--verified-green);
+  border-color: var(--gold-dim);
+}
+
+.vote-theme .result-fill {
+  background: linear-gradient(90deg, var(--gold), #FFD84D);
+}
+
+.vote-theme .page-note {
+  color: var(--text-muted);
+}

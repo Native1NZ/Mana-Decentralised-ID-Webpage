@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mana Travelers Permit</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='koru_favicon.png') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="emblem">
+      <img src="{{ url_for('static', filename='koru_favicon.png') }}" alt="Koru emblem" />
+    </div>
+    <p class="eyebrow">With Mana Decentralised ID</p>
+    <h1 class="title">Mana Travelers Permit</h1>
+    <div class="gold-rule"></div>
+  </header>
+
+  <main class="booklet">
+
+    <!-- LEFT PAGE: data page -->
+    <section class="page data-page">
+      <h2 class="section-title">Register Identity</h2>
+
+      <label class="field-label" for="name">Full Name</label>
+      <input class="field-input" type="text" id="name" placeholder="As it appears on your ID" />
+
+      <label class="field-label" for="wallet-display">Wallet Address</label>
+      <div class="wallet-row">
+        <input class="field-input mono" type="text" id="wallet-display" placeholder="Not connected" readonly />
+        <button class="btn btn-outline" id="connect-btn">Connect Wallet</button>
+      </div>
+
+      <div class="hairline"></div>
+
+      <button class="btn btn-outline" id="verify-btn">Verify &amp; Register</button>
+
+      <div class="spinner-row" id="spinner-row">
+        <div class="spinner" id="spinner"></div>
+        <span class="spinner-label">Verifying ID match</span>
+      </div>
+
+      <p class="status-text" id="result-text"></p>
+    </section>
+
+    <!-- RIGHT PAGE: photo page -->
+    <section class="page photo-page">
+      <p class="section-title" style="padding-bottom: 0px;">Photo ID Page</p>
+
+      <div class="chip-icon" aria-hidden="true"></div>
+
+      <div class="photo-frame">
+        <img id="photo-preview" class="photo-img" alt="" hidden />
+        <span id="photo-placeholder" class="photo-placeholder">No photo uploaded</span>
+        <div class="seal" id="seal">
+          <div class="seal-ring">
+            <span class="seal-text-big">VERIFIED</span>
+            <span class="seal-text-small">ON-CHAIN</span>
+          </div>
+        </div>
+      </div>
+
+      <label class="btn btn-gold upload-btn">
+        Upload ID Photo
+        <input type="file" id="id-photo" accept="image/png, image/jpeg" hidden />
+      </label>
+      <p class="status-text" id="upload-status">No ID uploaded yet</p>
+
+      <pre class="mrz" id="mrz"></pre>
+    </section>
+
+  </main>
+
+  <section class="page visa-page">
+    <h2 class="section-title">Access &amp; Permissions</h2>
+    <p class="page-note">
+      Your name is stored off-chain, encrypted. Only you can view it by
+      default. Granting access is an on-chain transaction you sign
+      yourself - it can be revoked at any time.
+    </p>
+
+    <div class="visa-columns">
+      <div class="visa-col">
+        <label class="field-label" for="grant-address">Grant / Revoke Access</label>
+        <input class="field-input mono" type="text" id="grant-address" placeholder="0x... viewer address" />
+        <div class="visa-btn-row">
+          <button class="btn btn-outline" id="grant-btn">Grant</button>
+          <button class="btn btn-outline" id="revoke-btn">Revoke</button>
+        </div>
+        <p class="status-text" id="access-status"></p>
+      </div>
+
+      <div class="visa-col">
+        <label class="field-label" for="lookup-address">Look Up a Record</label>
+        <input class="field-input mono" type="text" id="lookup-address" placeholder="0x... owner address" />
+        <button class="btn btn-outline" id="lookup-btn">Look Up</button>
+        <p class="status-text" id="lookup-status"></p>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.1/dist/ethers.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
