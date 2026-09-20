@@ -40,14 +40,29 @@ import threading
 import webbrowser
 
 from eth_account import Account
+from web3 import Web3
 from eth_account.messages import encode_defunct
 from cryptography.fernet import Fernet
 from flask import Flask, render_template, request, jsonify
 from PIL import Image
 import pytesseract
-from web3 import Web3
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(os.path.dirname(__file__), "data", "mana.db")
+db = SQLAlchemy(app)
+
+class Identity(db.Model):
+    address = db.Column(db.String(42), primary_key=True)
+    encrypted_name = db.Column(db.Text, nullable=False)
+
+class Vote(db.Model):
+    address = db.Column(db.String(42), primary_key=True)
+    option = db.Column(db.String(50), nullable=False)
+
+with app.app_context():
+    db.create_all()
 
 # ----------------------------------------------------------------------
 # OCR engine setup
@@ -99,33 +114,24 @@ else:
 fernet = Fernet(_encryption_key)
 
 
-def _load_store():
-    if not os.path.exists(STORE_PATH):
-        return {}
-    with open(STORE_PATH) as f:
-        return json.load(f)
-
-
-def _save_store(store):
-    with open(STORE_PATH, "w") as f:
-        json.dump(store, f, indent=2)
-
-
 def store_name(address, name):
     """Encrypt and save a name against a wallet address (overwrites any previous entry)."""
-    store = _load_store()
     encrypted = fernet.encrypt(name.encode()).decode()
-    store[address] = encrypted
-    _save_store(store)
+    identity = Identity.query.get(address)
+    if identity:
+        identity.encrypted_name = encrypted
+    else:
+        identity = Identity(address=address, encrypted_name=encrypted)
+        db.session.add(identity)
+    db.session.commit()
 
 
 def get_name(address):
     """Decrypt and return the stored name for an address, or None if not registered."""
-    store = _load_store()
-    encrypted = store.get(address)
-    if not encrypted:
+    identity = Identity.query.get(address)
+    if not identity:
         return None
-    return fernet.decrypt(encrypted.encode()).decode()
+    return fernet.decrypt(identity.encrypted_name.encode()).decode()
 
 
 # ----------------------------------------------------------------------
@@ -140,15 +146,13 @@ VOTES_PATH = os.path.join(DATA_DIR, "votes.json")
 
 
 def _load_votes():
-    if not os.path.exists(VOTES_PATH):
-        return {"tally": {option: 0 for option in VOTE_OPTIONS}, "voted": []}
-    with open(VOTES_PATH) as f:
-        return json.load(f)
-
-
-def _save_votes(votes):
-    with open(VOTES_PATH, "w") as f:
-        json.dump(votes, f, indent=2)
+    tally = {option: 0 for option in VOTE_OPTIONS}
+    all_votes = Vote.query.all()
+    for v in all_votes:
+        if v.option in tally:
+            tally[v.option] += 1
+    voted = [v.address for v in all_votes]
+    return {"tally": tally, "voted": voted}
 
 
 def is_identity_verified(address):
@@ -233,15 +237,19 @@ def vote_status():
             error="Contract not configured yet - set CONTRACT_ADDRESS in app.py.",
         ), 500
 
-    votes = _load_votes()
+        existing_vote = Vote.query.get(address)
+    if existing_vote:
+        return jsonify(ok=False, error="This identity has already voted.", tally=_load_votes()["tally"]), 409
 
-    return jsonify(
-        ok=True,
-        registered=is_identity_verified(address),
-        already_voted=address in votes["voted"],
-        options=VOTE_OPTIONS,
-        tally=votes["tally"],
-    )
+    try:
+        new_vote = Vote(address=address, option=option)
+        db.session.add(new_vote)
+        db.session.commit()
+    except Exception:
+        db.session.rollback()
+        return jsonify(ok=False, error="This identity has already voted.", tally=_load_votes()["tally"]), 409
+
+    return jsonify(ok=True, tally=_load_votes()["tally"])
 
 
 @app.route("/api/vote", methods=["POST"])
