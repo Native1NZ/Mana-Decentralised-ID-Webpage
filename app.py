@@ -63,7 +63,7 @@ RPC_URL = "https://liteforge.rpc.caldera.xyz/http"
 w3 = Web3(Web3.HTTPProvider(RPC_URL))
 
 # TODO: fill these in after running contract/deploy.py
-CONTRACT_ADDRESS = "0x91fD97086d24234D8f124388d66A89006af201A5"
+CONTRACT_ADDRESS = "0x231CfbdEA9E99F2Cfb795ed431BA2560Ce69909E"
 CONTRACT_ABI = None      # Keep None as python will Auto-load the ABI from contract/contract_abi.json
 
 # Auto-load the ABI from contract/contract_abi.json if it's been generated,
@@ -86,17 +86,16 @@ if CONTRACT_ADDRESS and CONTRACT_ABI:
 # encryption key via a secrets manager rather than a local file.
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 os.makedirs(DATA_DIR, exist_ok=True)
-KEY_PATH = os.path.join(DATA_DIR, "secret.key")
 STORE_PATH = os.path.join(DATA_DIR, "identities.json")
 
-if os.path.exists(KEY_PATH):
-    with open(KEY_PATH, "rb") as f:
-        _encryption_key = f.read()
+import keyring
+
+_encryption_key = keyring.get_password("mana-did", "encryption_key")
+if _encryption_key:
+    _encryption_key = _encryption_key.encode()
 else:
     _encryption_key = Fernet.generate_key()
-    with open(KEY_PATH, "wb") as f:
-        f.write(_encryption_key)
-
+    keyring.set_password("mana-did", "encryption_key", _encryption_key.decode())
 fernet = Fernet(_encryption_key)
 
 

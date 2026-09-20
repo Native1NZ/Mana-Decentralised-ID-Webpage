@@ -31,7 +31,10 @@ from web3 import Web3
 load_dotenv()
 
 RPC_URL = os.environ["RPC_URL"]
-PRIVATE_KEY = os.environ["DEPLOYER_PRIVATE_KEY"]
+import keyring
+PRIVATE_KEY = keyring.get_password("mana-did", "deployer_private_key")
+if not PRIVATE_KEY:
+    raise RuntimeError("Deployer key not found in keyring. Run the setup step first.")
 
 CONTRACT_PATH = os.path.join(os.path.dirname(__file__), "identity_registry.vy")
 

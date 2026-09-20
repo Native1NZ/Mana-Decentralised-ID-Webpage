@@ -6,7 +6,7 @@
 // before returning anything).
 
 // TODO: fill these in after running contract/deploy.py
-const CONTRACT_ADDRESS = "0x91fD97086d24234D8f124388d66A89006af201A5";
+const CONTRACT_ADDRESS = "0x231CfbdEA9E99F2Cfb795ed431BA2560Ce69909E";
 const CONTRACT_ABI = [
   {
     "name": "Registered",
