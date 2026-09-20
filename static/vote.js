@@ -96,13 +96,20 @@ ballotOptions.addEventListener("click", async (e) => {
 
   const option = btn.dataset.option;
   setOptionsEnabled(false);
-  showStatus(voteStatus, "Casting your vote...", "ok");
+  showStatus(voteStatus, "Confirm the signature request in MetaMask...", "ok");
 
   try {
+    const message = `MANA DID Vote\nAddress: ${connectedAddress}\nOption: ${option}`;
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const signature = await signer.signMessage(message);
+
+    showStatus(voteStatus, "Casting your vote...", "ok");
+
     const response = await fetch("/api/vote", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ address: connectedAddress, option }),
+      body: JSON.stringify({ address: connectedAddress, option, message, signature }),
     });
     const data = await response.json();
 

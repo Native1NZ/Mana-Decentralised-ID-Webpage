@@ -39,6 +39,8 @@ import io
 import threading
 import webbrowser
 
+from eth_account import Account
+from eth_account.messages import encode_defunct
 from cryptography.fernet import Fernet
 from flask import Flask, render_template, request, jsonify
 from PIL import Image
@@ -57,11 +59,11 @@ if sys.platform.startswith("win"):
 # ----------------------------------------------------------------------
 # Blockchain connection setup
 # ----------------------------------------------------------------------
-RPC_URL = "" # Your API key
+RPC_URL = "https://liteforge.rpc.caldera.xyz/http"
 w3 = Web3(Web3.HTTPProvider(RPC_URL))
 
 # TODO: fill these in after running contract/deploy.py
-CONTRACT_ADDRESS = ""  # e.g. "0xYourContractAddressHere"
+CONTRACT_ADDRESS = "0x91fD97086d24234D8f124388d66A89006af201A5"
 CONTRACT_ABI = None      # Keep None as python will Auto-load the ABI from contract/contract_abi.json
 
 # Auto-load the ABI from contract/contract_abi.json if it's been generated,
@@ -259,6 +261,20 @@ def cast_vote():
     body = request.get_json(silent=True) or {}
     address = body.get("address", "").strip()
     option = body.get("option", "").strip()
+    message = body.get("message", "")
+    signature = body.get("signature", "")
+
+    expected_message = f"MANA DID Vote\nAddress: {address}\nOption: {option}"
+    if message != expected_message:
+        return jsonify(ok=False, error="Signed message doesn't match vote request."), 400
+
+    try:
+        recovered = Account.recover_message(encode_defunct(text=message), signature=signature)
+    except Exception:
+        return jsonify(ok=False, error="Invalid signature."), 401
+
+    if recovered.lower() != address.lower():
+        return jsonify(ok=False, error="Signature does not match the claimed wallet."), 401
 
     if not Web3.is_address(address):
         return jsonify(ok=False, error="Invalid wallet address."), 400
