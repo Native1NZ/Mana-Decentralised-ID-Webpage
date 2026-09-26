@@ -3,3 +3,6 @@ contract\.env
 __pycache__/ 
 *.pyc 
 data/ 
+app_backup.py
+app_backup2.py
+error_log.txt
