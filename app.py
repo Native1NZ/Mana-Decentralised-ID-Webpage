@@ -39,6 +39,7 @@ import io
 import threading
 import webbrowser
 
+from sqlalchemy.exc import IntegrityError
 from eth_account import Account
 from web3 import Web3
 from eth_account.messages import encode_defunct
@@ -237,19 +238,14 @@ def vote_status():
             error="Contract not configured yet - set CONTRACT_ADDRESS in app.py.",
         ), 500
 
-        existing_vote = Vote.query.get(address)
-    if existing_vote:
-        return jsonify(ok=False, error="This identity has already voted.", tally=_load_votes()["tally"]), 409
-
-    try:
-        new_vote = Vote(address=address, option=option)
-        db.session.add(new_vote)
-        db.session.commit()
-    except Exception:
-        db.session.rollback()
-        return jsonify(ok=False, error="This identity has already voted.", tally=_load_votes()["tally"]), 409
-
-    return jsonify(ok=True, tally=_load_votes()["tally"])
+    votes = _load_votes()
+    return jsonify(
+        ok=True,
+        registered=is_identity_verified(address),
+        already_voted=address in votes["voted"],
+        options=VOTE_OPTIONS,
+        tally=votes["tally"],
+    )
 
 
 @app.route("/api/vote", methods=["POST"])
@@ -302,16 +298,28 @@ def cast_vote():
             ok=False, error="This wallet hasn't completed identity verification yet."
         ), 403
 
-    votes = _load_votes()
+    if db.session.get(Vote, address):
+        return jsonify(
+            ok=False,
+            error="This identity has already voted.",
+            tally=_load_votes()["tally"],
+        ), 409
 
-    if address in votes["voted"]:
-        return jsonify(ok=False, error="This identity has already voted.", tally=votes["tally"]), 409
+    try:
+        db.session.add(Vote(address=address, option=option))
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify(
+            ok=False,
+            error="This identity has already voted.",
+            tally=_load_votes()["tally"],
+        ), 409
+    except Exception:
+        db.session.rollback()
+        return jsonify(ok=False, error="Couldn't record the vote."), 500
 
-    votes["tally"][option] += 1
-    votes["voted"].append(address)
-    _save_votes(votes)
-
-    return jsonify(ok=True, tally=votes["tally"])
+    return jsonify(ok=True, tally=_load_votes()["tally"])
 
 
 @app.route("/api/vote-results", methods=["GET"])
