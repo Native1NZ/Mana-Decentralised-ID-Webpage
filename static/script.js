@@ -6,7 +6,7 @@
 // before returning anything).
 
 // TODO: fill these in after running contract/deploy.py
-const CONTRACT_ADDRESS = "0x231CfbdEA9E99F2Cfb795ed431BA2560Ce69909E";
+const CONTRACT_ADDRESS = "0x51090985fbE7a2dcFC75B396B785BD3072F64BFe";
 const CONTRACT_ABI = [
   {
     "name": "Registered",
@@ -62,6 +62,10 @@ const CONTRACT_ABI = [
       {
         "name": "hashed_name",
         "type": "bytes32"
+      },
+      {
+        "name": "expiry_timestamp",
+        "type": "uint256"
       }
     ],
     "outputs": []
@@ -114,6 +118,23 @@ const CONTRACT_ABI = [
   {
     "stateMutability": "view",
     "type": "function",
+    "name": "is_verified",
+    "inputs": [
+      {
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
     "name": "registered",
     "inputs": [
       {
@@ -142,6 +163,23 @@ const CONTRACT_ABI = [
       {
         "name": "",
         "type": "bytes32"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "expiry",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
       }
     ]
   },
@@ -293,7 +331,8 @@ verifyBtn.addEventListener("click", async () => {
     // --- write the name hash to the blockchain, signed by the user's own wallet ---
     const nameHash = ethers.keccak256(ethers.toUtf8Bytes(name));
     const contract = await getContractWithSigner();
-    const tx = await contract.register(nameHash);
+    const oneYearFromNow = Math.floor(Date.now() / 1000) + (365 * 24 * 60 * 60);
+    const tx = await contract.register(nameHash, oneYearFromNow);
     await tx.wait();
 
     showResult(`Verified and registered on-chain as ${name}.`, "ok");

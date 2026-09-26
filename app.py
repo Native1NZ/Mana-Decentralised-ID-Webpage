@@ -79,7 +79,7 @@ RPC_URL = "https://liteforge.rpc.caldera.xyz/http"
 w3 = Web3(Web3.HTTPProvider(RPC_URL))
 
 # TODO: fill these in after running contract/deploy.py
-CONTRACT_ADDRESS = "0x231CfbdEA9E99F2Cfb795ed431BA2560Ce69909E"
+CONTRACT_ADDRESS = "0x51090985fbE7a2dcFC75B396B785BD3072F64BFe"
 CONTRACT_ABI = None      # Keep None as python will Auto-load the ABI from contract/contract_abi.json
 
 # Auto-load the ABI from contract/contract_abi.json if it's been generated,

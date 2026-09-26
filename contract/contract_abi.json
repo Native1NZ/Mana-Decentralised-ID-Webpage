@@ -53,6 +53,10 @@
       {
         "name": "hashed_name",
         "type": "bytes32"
+      },
+      {
+        "name": "expiry_timestamp",
+        "type": "uint256"
       }
     ],
     "outputs": []
@@ -105,6 +109,23 @@
   {
     "stateMutability": "view",
     "type": "function",
+    "name": "is_verified",
+    "inputs": [
+      {
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
     "name": "registered",
     "inputs": [
       {
@@ -133,6 +154,23 @@
       {
         "name": "",
         "type": "bytes32"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "expiry",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
       }
     ]
   },

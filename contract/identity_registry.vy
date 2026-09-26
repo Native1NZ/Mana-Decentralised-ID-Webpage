@@ -21,6 +21,7 @@ Privacy model:
 
 registered: public(HashMap[address, bool])
 name_hash: public(HashMap[address, bytes32])
+expiry: public(HashMap[address, uint256])
 access: public(HashMap[address, HashMap[address, bool]])  # owner => viewer => allowed
 
 event Registered:
@@ -36,10 +37,12 @@ event AccessRevoked:
 
 
 @external
-def register(hashed_name: bytes32):
-    """Register (or update) the caller's identity anchor."""
+def register(hashed_name: bytes32, expiry_timestamp: uint256):
+    """Register (or update) the caller's identity anchor, with an expiry date."""
+    assert expiry_timestamp > block.timestamp, "Expiry must be in the future"
     self.registered[msg.sender] = True
     self.name_hash[msg.sender] = hashed_name
+    self.expiry[msg.sender] = expiry_timestamp
     log Registered(owner=msg.sender)
 
 
@@ -65,3 +68,10 @@ def has_access(owner: address, viewer: address) -> bool:
     if owner == viewer:
         return True
     return self.access[owner][viewer]
+
+
+@view
+@external
+def is_verified(owner: address) -> bool:
+    """True if `owner` registered and their ID hasn't expired."""
+    return self.registered[owner] and block.timestamp < self.expiry[owner]
