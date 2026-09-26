@@ -38,11 +38,13 @@ import sys
 import io
 import threading
 import webbrowser
+import re
 
 from sqlalchemy.exc import IntegrityError
 from eth_account import Account
 from web3 import Web3
 from eth_account.messages import encode_defunct
+from datetime import datetime, timezone
 from cryptography.fernet import Fernet
 from flask import Flask, render_template, request, jsonify
 from PIL import Image
@@ -203,6 +205,19 @@ def generate_mrz(name, address):
     return line1, line2
 
 
+def extract_expiry(raw_text):
+    """Find a bare MM/YYYY date anywhere in raw OCR text, return a Unix timestamp or None."""
+    match = re.search(r"\b(\d{1,2})/(\d{4})\b", raw_text)
+    if not match:
+        return None
+    month, year = int(match.group(1)), int(match.group(2))
+    if not (1 <= month <= 12):
+        return None
+    try:
+        expiry_dt = datetime(year, month, 1, tzinfo=timezone.utc)
+        return int(expiry_dt.timestamp())
+    except ValueError:
+        return None
 # ----------------------------------------------------------------------
 # Routes
 # ----------------------------------------------------------------------
@@ -371,6 +386,8 @@ def verify():
     # store the real name off-chain, encrypted at rest
     store_name(checksum_address, name)
 
+    
+    expiry_timestamp = extract_expiry(raw_text)
     line1, line2 = generate_mrz(name, checksum_address)
 
     return jsonify(
@@ -379,6 +396,7 @@ def verify():
         mrz_line1=line1,
         mrz_line2=line2,
         address=checksum_address,
+        expiry_timestamp=expiry_timestamp,
     )
 
 

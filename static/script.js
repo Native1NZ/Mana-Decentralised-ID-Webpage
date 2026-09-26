@@ -332,7 +332,8 @@ verifyBtn.addEventListener("click", async () => {
     const nameHash = ethers.keccak256(ethers.toUtf8Bytes(name));
     const contract = await getContractWithSigner();
     const oneYearFromNow = Math.floor(Date.now() / 1000) + (365 * 24 * 60 * 60);
-    const tx = await contract.register(nameHash, oneYearFromNow);
+    const expiryTimestamp = data.expiry_timestamp || oneYearFromNow;
+    const tx = await contract.register(nameHash, expiryTimestamp);
     await tx.wait();
 
     showResult(`Verified and registered on-chain as ${name}.`, "ok");
