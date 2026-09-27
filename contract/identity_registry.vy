@@ -24,6 +24,8 @@ name_hash: public(HashMap[address, bytes32])
 expiry: public(HashMap[address, uint256])
 access: public(HashMap[address, HashMap[address, bool]])  # owner => viewer => allowed
 
+MAX_VALIDITY_SECONDS: constant(uint256) = 15 * 365 * 24 * 60 * 60
+
 event Registered:
     owner: address
 
@@ -40,8 +42,9 @@ event AccessRevoked:
 def register(hashed_name: bytes32, expiry_timestamp: uint256):
     """Register (or update) the caller's identity anchor, with an expiry date."""
     assert expiry_timestamp > block.timestamp, "Expiry must be in the future"
+    assert expiry_timestamp <= block.timestamp + MAX_VALIDITY_SECONDS, "Expiry too far in the future"
     self.registered[msg.sender] = True
-    self.name_hash[msg.sender] = hashed_name
+    self.name_hash[msg.sender] = keccak256(concat(hashed_name, convert(msg.sender, bytes32)))
     self.expiry[msg.sender] = expiry_timestamp
     log Registered(owner=msg.sender)
 
