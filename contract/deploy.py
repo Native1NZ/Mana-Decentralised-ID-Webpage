@@ -4,6 +4,10 @@ Deploy the Tuakiri Identity Registry contract to Sepolia testnet.
 Setup:
     py -m pip install vyper web3 python-dotenv
 
+    ADMIN_1 = "0x45837d20c6B6D996df1C87E1cb4A1D6c3192E0E4"
+    ADMIN_2 = "0xCC189d71F617053106958B56399D6BdB086D984C"
+    ADMIN_3 = "0x5df30d270De7F2bc60c2cac2A91e1E4f82266654"
+
     Create a .env file next to this script containing:
         RPC_URL=https://eth-sepolia.g.alchemy.com/v2/YOUR_ALCHEMY_KEY
         DEPLOYER_PRIVATE_KEY=your_testnet_wallet_private_key
@@ -32,6 +36,9 @@ load_dotenv()
 
 RPC_URL = os.environ["RPC_URL"]
 import keyring
+ADMIN_1 = "0x45837d20c6B6D996df1C87E1cb4A1D6c3192E0E4"
+ADMIN_2 = "0xCC189d71F617053106958B56399D6BdB086D984C"
+ADMIN_3 = "0x5df30d270De7F2bc60c2cac2A91e1E4f82266654"
 PRIVATE_KEY = keyring.get_password("mana-did", "deployer_private_key")
 if not PRIVATE_KEY:
     raise RuntimeError("Deployer key not found in keyring. Run the setup step first.")
@@ -53,11 +60,11 @@ print(f"Deploying from {account.address} ...")
 
 ContractFactory = w3.eth.contract(abi=abi, bytecode=bytecode)
 
-tx = ContractFactory.constructor().build_transaction({
+tx = ContractFactory.constructor(ADMIN_1, ADMIN_2, ADMIN_3).build_transaction({
     "from": account.address,
     "nonce": w3.eth.get_transaction_count(account.address),
     "gas": 1_500_000,
-    "gasPrice": w3.eth.gas_price,
+    "gasPrice": int(w3.eth.gas_price * 1.2),
 })
 signed = account.sign_transaction(tx)
 tx_hash = w3.eth.send_raw_transaction(signed.raw_transaction)

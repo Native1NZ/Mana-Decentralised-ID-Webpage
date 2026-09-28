@@ -46,6 +46,72 @@
     "type": "event"
   },
   {
+    "name": "ProposalCreated",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "action",
+        "type": "string",
+        "indexed": false
+      },
+      {
+        "name": "value",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "proposer",
+        "type": "address",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "ProposalApproved",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "approver",
+        "type": "address",
+        "indexed": false
+      },
+      {
+        "name": "approvals",
+        "type": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "ProposalExecuted",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "action",
+        "type": "string",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
     "stateMutability": "nonpayable",
     "type": "function",
     "name": "register",
@@ -124,6 +190,44 @@
     ]
   },
   {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "propose_pause",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "propose_unpause",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "propose_max_validity",
+    "inputs": [
+      {
+        "name": "new_value",
+        "type": "uint256"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "approve",
+    "inputs": [
+      {
+        "name": "proposal_id",
+        "type": "uint256"
+      }
+    ],
+    "outputs": []
+  },
+  {
     "stateMutability": "view",
     "type": "function",
     "name": "registered",
@@ -194,5 +298,166 @@
         "type": "bool"
       }
     ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "admins",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "paused",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "max_validity_seconds",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "proposal_count",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "proposal_action",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "proposal_value",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "proposal_approved_by",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "uint256"
+      },
+      {
+        "name": "arg1",
+        "type": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "proposal_approval_count",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "proposal_executed",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ]
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "admin1",
+        "type": "address"
+      },
+      {
+        "name": "admin2",
+        "type": "address"
+      },
+      {
+        "name": "admin3",
+        "type": "address"
+      }
+    ],
+    "outputs": []
   }
 ]

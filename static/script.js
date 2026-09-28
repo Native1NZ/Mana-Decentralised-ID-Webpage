@@ -6,7 +6,7 @@
 // before returning anything).
 
 // TODO: fill these in after running contract/deploy.py
-const CONTRACT_ADDRESS = "0x7784DF12C4B9Ce810f73dceE1Be194Fae9472217";
+const CONTRACT_ADDRESS = "0xf6f9F2faB76d7b189B42b657f5d3Cfe60A342041";
 const CONTRACT_ABI = [
   {
     "name": "Registered",
@@ -48,6 +48,72 @@ const CONTRACT_ABI = [
       {
         "name": "viewer",
         "type": "address",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "ProposalCreated",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "action",
+        "type": "string",
+        "indexed": false
+      },
+      {
+        "name": "value",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "proposer",
+        "type": "address",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "ProposalApproved",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "approver",
+        "type": "address",
+        "indexed": false
+      },
+      {
+        "name": "approvals",
+        "type": "uint256",
+        "indexed": false
+      }
+    ],
+    "anonymous": false,
+    "type": "event"
+  },
+  {
+    "name": "ProposalExecuted",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "uint256",
+        "indexed": false
+      },
+      {
+        "name": "action",
+        "type": "string",
         "indexed": false
       }
     ],
@@ -133,6 +199,44 @@ const CONTRACT_ABI = [
     ]
   },
   {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "propose_pause",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "propose_unpause",
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "propose_max_validity",
+    "inputs": [
+      {
+        "name": "new_value",
+        "type": "uint256"
+      }
+    ],
+    "outputs": []
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "name": "approve",
+    "inputs": [
+      {
+        "name": "proposal_id",
+        "type": "uint256"
+      }
+    ],
+    "outputs": []
+  },
+  {
     "stateMutability": "view",
     "type": "function",
     "name": "registered",
@@ -203,8 +307,169 @@ const CONTRACT_ABI = [
         "type": "bool"
       }
     ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "admins",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "paused",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "max_validity_seconds",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "proposal_count",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "proposal_action",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "proposal_value",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "proposal_approved_by",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "uint256"
+      },
+      {
+        "name": "arg1",
+        "type": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "proposal_approval_count",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ]
+  },
+  {
+    "stateMutability": "view",
+    "type": "function",
+    "name": "proposal_executed",
+    "inputs": [
+      {
+        "name": "arg0",
+        "type": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ]
+  },
+  {
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+    "inputs": [
+      {
+        "name": "admin1",
+        "type": "address"
+      },
+      {
+        "name": "admin2",
+        "type": "address"
+      },
+      {
+        "name": "admin3",
+        "type": "address"
+      }
+    ],
+    "outputs": []
   }
-];
+]
 
 let connectedAddress = null;
 let selectedFile = null;
