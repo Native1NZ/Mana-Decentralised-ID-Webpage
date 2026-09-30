@@ -96,6 +96,30 @@ if CONTRACT_ADDRESS and CONTRACT_ABI:
     contract = w3.eth.contract(address=Web3.to_checksum_address(CONTRACT_ADDRESS), abi=CONTRACT_ABI)
 
 
+def purge_expired_identities():
+    """Delete stored names for any identity whose on-chain registration has expired."""
+    if contract is None:
+        return 0
+    removed = 0
+    for identity in Identity.query.all():
+        try:
+            still_verified = contract.functions.is_verified(
+                Web3.to_checksum_address(identity.address)
+            ).call()
+        except Exception:
+            continue
+        if not still_verified:
+            db.session.delete(identity)
+            removed += 1
+    if removed:
+        db.session.commit()
+    return removed
+
+
+with app.app_context():
+    purge_expired_identities()
+
+
 # ----------------------------------------------------------------------
 # Encrypted off-chain storage
 # ----------------------------------------------------------------------
